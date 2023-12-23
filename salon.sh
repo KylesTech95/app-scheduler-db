@@ -1,6 +1,6 @@
 #! /bin/bash
 PSQL="psql --username=postgres --dbname=salon --tuples-only -c "
-
+# Choose from services (again)
 CHOOSE_AGAIN(){
   #list of services
       SERVICES=$($PSQL "select * from services")
@@ -18,22 +18,23 @@ CHOOSE_AGAIN(){
     CHOOSE_AGAIN $SERVICE_TO_BUY $SERVICE_COUNT
 
     else
-        IDENTIFY_SERVICE_CHOSEN $SERVICE_ID $NAME
-fi
+        NAME=$($PSQL "select name from services where service_id=$SERVICE_TO_BUY");
+        IDENTIFY_SERVICE_CHOSEN $NAME
+  fi
 
 }
-
+# What service was chosen?
 IDENTIFY_SERVICE_CHOSEN(){
-echo -e "Great, you chose $1."
+  echo -e "Great, you chose $1."
 }
-
-echo -e "\n ~~~~~ MY SALON ~~~~~ \n"
-#list of services
-SERVICES=$($PSQL "select * from services")
-echo -e "$SERVICES" | while read SERVICE_ID BAR NAME
-  do
-    echo "$SERVICE_ID) $NAME"
-  done
+WELCOME(){
+  echo -e "\n ~~~~~ MY SALON ~~~~~ \n"
+  #list of services
+  SERVICES=$($PSQL "select * from services")
+  echo -e "$SERVICES" | while read SERVICE_ID BAR NAME
+    do
+      echo "$SERVICE_ID) $NAME"
+    done
   # ask for service to purchase
   echo -e "\nWhich service would you like? (Choose by the number)"
   # Get num of rows from services table
@@ -41,14 +42,17 @@ echo -e "$SERVICES" | while read SERVICE_ID BAR NAME
   #user chooses a service.
   read SERVICE_TO_BUY
   # if service does not exist
-  if [[ ! $SERVICE_TO_BUY =~ ^[0-9]$ || $SERVICE_TO_BUY -gt $SERVICE_COUNT ]]
-  then
-  # display services again
-    echo -e "\nOption #$SERVICE_TO_BUY is not available.\nPlease choose again.\n"
-    #user chooses a service.
-    CHOOSE_AGAIN
-  else
-  NAME=$($PSQL "select name from services where service_id=$SERVICE_TO_BUY");
-  IDENTIFY_SERVICE_CHOSEN $NAME
-  fi
+    if [[ ! $SERVICE_TO_BUY =~ ^[0-9]$ || $SERVICE_TO_BUY -gt $SERVICE_COUNT ]]
+    then
+    # display services again
+      echo -e "\nOption #$SERVICE_TO_BUY is not available.\nPlease choose again.\n"
+      #user chooses a service.
+      CHOOSE_AGAIN
+    else
+    NAME=$($PSQL "select name from services where service_id=$SERVICE_TO_BUY");
+    IDENTIFY_SERVICE_CHOSEN $NAME
+    fi
+}
+WELCOME
+
   
