@@ -1,6 +1,6 @@
 #! /bin/bash
 PSQL="psql --username=postgres --dbname=salon --tuples-only -c "
-# Choose from services (again)
+# re-enter service number
 CHOOSE_AGAIN(){
   # display services again
       echo -e "\nOption #$SERVICE_ID_SELECTED is not available.\nPlease choose again.\n"
@@ -29,6 +29,7 @@ CHOOSE_AGAIN(){
 IDENTIFY_SERVICE_CHOSEN(){
   echo -e "Great, you chose $1."
 }
+# re-enter name
 NAME_AGAIN(){
     echo -e "\nWhat is your name? "
   sleep 1
@@ -42,6 +43,7 @@ NAME_AGAIN(){
     SERVICE_AGAIN
   fi
 }
+# re-enter phone number
 PHONE_AGAIN(){
   echo -e "\nWhat is your phone number? (format: 012-345-6789) "
   read CUSTOMER_PHONE
@@ -54,6 +56,7 @@ PHONE_AGAIN(){
     NAME_AGAIN
   fi
 }
+# re-enter service time
 SERVICE_AGAIN(){
         echo -e "\nWhen would you like to come? (format: 1:45 or 01:45)"
         read SERVICE_TIME
@@ -65,7 +68,6 @@ SERVICE_AGAIN(){
             sleep 1
         fi
 }
-
 #What is the customer's information
 CUSTOMER_INFORMATION(){
   # What is your phone number?
@@ -82,7 +84,7 @@ CUSTOMER_INFORMATION(){
   echo -e "\nWhat is your name?"
     sleep 1
     read CUSTOMER_NAME
-   if [[ ! $CUSTOMER_NAME =~ ^[a-zA-Z]+$ ]]
+      if [[ ! $CUSTOMER_NAME =~ ^[a-zA-Z]+$ ]]
       then
         NAME_AGAIN
       else
@@ -92,14 +94,12 @@ CUSTOMER_INFORMATION(){
         read SERVICE_TIME
         if [[ ! $SERVICE_TIME =~ ^[0-9]{1,2}:([0]{2}|[0-9]{2})$ ]]
         then
-        echo -e "\n Choose a valid time from our format (format: 1:45 or 01:45)"
+        echo -e "\nChoose a valid time from our format (format: 1:45 or 01:45)"
           SERVICE_AGAIN
         else
           #enter time appointed
           echo -e "\nYour Service Appointed time is $SERVICE_TIME" | sed -E 's/([0-9]{1}):/0\1:/g'
         fi
-
-
       fi
   fi
   
@@ -110,30 +110,30 @@ WELCOME(){
     then
       echo -e "\n$1"
       sleep 2
-    else
-  #list of services
-    SERVICES=$($PSQL "select * from services")
-    echo -e "$SERVICES" | while read SERVICE_ID BAR NAME
+      else
+      #list of services
+      SERVICES=$($PSQL "select * from services")
+      echo -e "$SERVICES" | while read SERVICE_ID BAR NAME
       do
         echo "$SERVICE_ID) $NAME"
       done
-    # ask for service to purchase
-    echo -e "\nWhich service would you like? (Choose by the number)"
-    # Get num of rows from services table
-    SERVICE_COUNT=$($PSQL "select count(name) from services")
-    #user chooses a service.
-    read SERVICE_ID_SELECTED
-    # if service does not exist
-      if [[ ! $SERVICE_ID_SELECTED =~ ^[0-9]$ || $SERVICE_ID_SELECTED -gt $SERVICE_COUNT ]]
-      then
-        #user chooses a service.
-        CHOOSE_AGAIN
-      else
+      # ask for service to purchase
+      echo -e "\nWhich service would you like? (Choose by the number)"
+      # Get num of rows from services table
+      SERVICE_COUNT=$($PSQL "select count(name) from services")
+      #user chooses a service.
+      read SERVICE_ID_SELECTED
+      # if service does not exist
+        if [[ ! $SERVICE_ID_SELECTED =~ ^[0-9]$ || $SERVICE_ID_SELECTED -gt $SERVICE_COUNT ]]
+        then
+          #user chooses a service.
+          CHOOSE_AGAIN
+        else
       NAME=$($PSQL "select name from services where service_id=$SERVICE_ID_SELECTED");
       IDENTIFY_SERVICE_CHOSEN $NAME
       fi
       sleep 1
-    CUSTOMER_INFORMATION
+      CUSTOMER_INFORMATION
     fi
   
 }
