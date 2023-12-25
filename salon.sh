@@ -4,9 +4,6 @@ PSQL="psql --username=postgres --dbname=salon --tuples-only -c "
 # echo $($PSQL "truncate appointments,customers;alter sequence customers_customer_id_seq restart with 1;alter sequence appointments_appointment_id_seq restart with 1;")
 # insert data
 
-
-
-
 WELCOME(){
   echo -e "\n ~~~~~ MY SALON ~~~~~ \n"
     if [[ $1 ]]
@@ -69,6 +66,7 @@ CHOOSE_AGAIN(){
 IDENTIFY_SERVICE_CHOSEN(){
   echo -e "Great, you chose $1."
 }
+
 
 # Start customer_information Fn with user's phone column
 CUSTOMER_INFORMATION(){
@@ -147,6 +145,9 @@ ENTER_SERVICE_TIME(){
           ENTER_DATA $CUSTOMER_PHONE $SERVICE_ID_SELECTED $CUSTOMER_NAME $SERVICE_TIME
       fi
 }
+
+
+#insert data into appointments & customers
 ENTER_DATA(){
   #instantiate customer-phone
   CUSTOMER_PHONE=$1

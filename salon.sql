@@ -150,44 +150,54 @@ ALTER TABLE ONLY public.services ALTER COLUMN service_id SET DEFAULT nextval('pu
 -- Data for Name: appointments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.appointments VALUES (1, 1, 1, '10:30');
-INSERT INTO public.appointments VALUES (2, 2, 3, '9:13');
-INSERT INTO public.appointments VALUES (3, 3, 1, '4:34');
-INSERT INTO public.appointments VALUES (4, 4, 1, '9:30');
+COPY public.appointments (appointment_id, customer_id, service_id, "time") FROM stdin;
+1	1	1	10:30
+2	2	3	9:13
+3	3	1	4:34
+4	4	1	9:30
+5	5	3	12:30
+6	6	4	11:20
+\.
 
 
 --
 -- Data for Name: customers; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.customers VALUES (1, '555-555-5555', 'Fabio');
-INSERT INTO public.customers VALUES (2, '123-456-7890', 'Mark');
-INSERT INTO public.customers VALUES (3, '838-333-9499', 'Jackson');
-INSERT INTO public.customers VALUES (4, '098-765-4321', 'Octavius');
+COPY public.customers (customer_id, phone, name) FROM stdin;
+1	555-555-5555	Fabio
+2	123-456-7890	Mark
+3	838-333-9499	Jackson
+4	098-765-4321	Octavius
+5	933-040-4555	Clay
+6	030-333-4445	Steven
+\.
 
 
 --
 -- Data for Name: services; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.services VALUES (1, 'mohawk');
-INSERT INTO public.services VALUES (2, 'curls');
-INSERT INTO public.services VALUES (3, 'blowout');
-INSERT INTO public.services VALUES (4, 'shapeup');
+COPY public.services (service_id, name) FROM stdin;
+1	mohawk
+2	curls
+3	blowout
+4	shapeup
+\.
 
 
 --
 -- Name: appointments_appointment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.appointments_appointment_id_seq', 4, true);
+SELECT pg_catalog.setval('public.appointments_appointment_id_seq', 6, true);
 
 
 --
 -- Name: customers_customer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.customers_customer_id_seq', 4, true);
+SELECT pg_catalog.setval('public.customers_customer_id_seq', 6, true);
 
 
 --
