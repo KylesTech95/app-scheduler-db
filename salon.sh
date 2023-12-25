@@ -1,22 +1,71 @@
 #! /bin/bash
 PSQL="psql --username=postgres --dbname=salon --tuples-only -c "
 #clear tables & reset sequence
-echo $($PSQL "truncate appointments,customers;alter sequence customers_customer_id_seq restart with 1;alter sequence appointments_appointment_id_seq restart with 1;")
-
+# echo $($PSQL "truncate appointments,customers;alter sequence customers_customer_id_seq restart with 1;alter sequence appointments_appointment_id_seq restart with 1;")
+# insert data
+ENTER_DATA(){
+  #instantiate customer-phone
+  CUSTOMER_PHONE=$1
+  #instantiate service-name
+  SERVICE_ID_SELECTED=$2
+  #instantiate customer-name
+  CUSTOMER_NAME=$3
+  #instantiate service-time
+  #retrieve service name
+  SERVICE_NAME=$($PSQL "select name from services where service_id=$SERVICE_ID_SELECTED")
+  SERVICE_TIME=$4
+  #instantiate customer_id
+  CUSTOMER_ID=$($PSQL "select customer_id from customers where phone='$CUSTOMER_PHONE' and name='$CUSTOMER_NAME'")
+  #if cutomer is not found in the database
+  if [[ -z $CUSTOMER_ID ]]
+    then
+    #insert into customers
+      INSERT_CUSTOMER=$($PSQL "insert into customers(name,phone) values('$CUSTOMER_NAME','$CUSTOMER_PHONE')")
+    #instantiate customer_id
+      CUSTOMER_ID=$($PSQL "select customer_id from customers where phone='$CUSTOMER_PHONE' and name='$CUSTOMER_NAME'")
+    #insert into appointments
+      INSERT_APPOINTMENT=$($PSQL "insert into appointments(service_id,customer_id,time) values($SERVICE_ID_SELECTED,$CUSTOMER_ID,'$SERVICE_TIME')")
+      if [[ $INSERT_CUSTOMER == 'INSERT 0 1' ]]
+      then
+        echo -e "\nName: $CUSTOMER_NAME\nPhone: $CUSTOMER_PHONE\nService: $SERVICE_NAME\nAppointed-time: $SERVICE_TIME"
+      fi
+    fi
+}
 # enter phone number
 ENTER_PHONE(){
+  SERVICE_ID_SELECTED=$1
+  # List of phones
+  PHONES_PROGRAMMED=$($PSQL "select phone from customers")
   echo -e "\nWhat is your phone number? (1234567890 or 12343452345)."
   sleep 1
   read CUSTOMER_PHONE
-  if [[ ! $CUSTOMER_PHONE =~ ^(1)?[0-9]{3}[0-9]{3}[0-9]{4}$ ]]
-    then
-    ENTER_PHONE
-    else
-    ENTER_NAME
-  fi
+  PHONE_MATCHES=$($PSQL "select phone from customers where phone='$CUSTOMER_PHONE'")
+    if [[ ! $CUSTOMER_PHONE =~ ^(1)?[0-9]{3}[0-9]{3}[0-9]{4}$ ]]
+        then
+        echo -e "\nEnter a valid phone number"
+        sleep 1
+        ENTER_PHONE
+        else
+        # If phone is already programmed
+        if [[ -z $PHONE_MATCHES ]]
+          then
+          ENTER_NAME $CUSTOMER_PHONE $SERVICE_ID_SELECTED
+          else
+          # "\nThis number is already in our database./nEnter another number"
+          echo -e "\nThis number is already in our database./nEnter another phone number."
+          sleep 1
+          ENTER_PHONE
+          fi
+      fi
+
+    
 }
 # Enter Name
 ENTER_NAME(){
+  #instantiate customer-phone
+  CUSTOMER_PHONE=$1
+  #instantiate service-name
+  SERVICE_ID_SELECTED=$2
   # What is your name?
     echo -e "\nWhat is your name?"
     sleep 1
@@ -26,10 +75,17 @@ ENTER_NAME(){
           # PLACE YOUR STATEMENT
           ENTER_NAME
         else
-          ENTER_SERVICE_TIME
+          ENTER_SERVICE_TIME  $CUSTOMER_PHONE $SERVICE_ID_SELECTED $CUSTOMER_NAME
       fi
 }
 ENTER_SERVICE_TIME(){
+  #instantiate customer-phone
+  CUSTOMER_PHONE=$1
+  #instantiate service-name
+  SERVICE_ID_SELECTED=$2
+  #instantiate customer-name
+  CUSTOMER_NAME=$3
+
   # When would you like to come? (format: 1:35 or 12:30)?
     echo -e "\nWhen would you like to come? (format: 1:35 or 12:30)?"
     sleep 1
@@ -40,6 +96,8 @@ ENTER_SERVICE_TIME(){
           ENTER_SERVICE_TIME
         else
           echo -e "\nYour service time is $SERVICE_TIME"
+          sleep 1
+          ENTER_DATA $CUSTOMER_PHONE $SERVICE_ID_SELECTED $CUSTOMER_NAME $SERVICE_TIME
       fi
 }
 # re-enter service number
@@ -100,15 +158,17 @@ WELCOME(){
       IDENTIFY_SERVICE_CHOSEN $SERVICE_NAME
       fi
       sleep 1
-      CUSTOMER_INFORMATION
+      CUSTOMER_INFORMATION $SERVICE_ID_SELECTED
     fi
   
 }
 #What is the customer's information (serviceName)
 CUSTOMER_INFORMATION(){
-  ENTER_PHONE
-  ENTER_NAME
-  ENTER_SERVICE_TIME
+  SERVICE_ID_SELECTED=$1
+  ENTER_PHONE $SERVICE_ID_SELECTED
+  # ENTER_NAME
+  # ENTER_SERVICE_TIME
+  # INSERT_DATA 
 }
 
 WELCOME
