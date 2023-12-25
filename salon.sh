@@ -29,6 +29,19 @@ ENTER_NAME(){
           ENTER_SERVICE_TIME
       fi
 }
+ENTER_SERVICE_TIME(){
+  # When would you like to come? (format: 1:35 or 12:30)?
+    echo -e "\nWhen would you like to come? (format: 1:35 or 12:30)?"
+    sleep 1
+      read SERVICE_TIME
+      if [[ ! $SERVICE_TIME =~ ^([0-9])?[1-9]:[0-9]{2}$ ]]
+        then
+          # PLACE YOUR STATEMENT
+          ENTER_SERVICE_TIME
+        else
+          echo -e "\nYour service time is $SERVICE_TIME"
+      fi
+}
 # re-enter service number
 CHOOSE_AGAIN(){
   # display services again
@@ -91,12 +104,11 @@ WELCOME(){
     fi
   
 }
-
 #What is the customer's information (serviceName)
 CUSTOMER_INFORMATION(){
   ENTER_PHONE
   ENTER_NAME
-  
+  ENTER_SERVICE_TIME
 }
 
 WELCOME
