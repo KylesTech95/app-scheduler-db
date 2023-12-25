@@ -27,7 +27,8 @@ ENTER_DATA(){
       INSERT_APPOINTMENT=$($PSQL "insert into appointments(service_id,customer_id,time) values($SERVICE_ID_SELECTED,$CUSTOMER_ID,'$SERVICE_TIME')")
       if [[ $INSERT_CUSTOMER == 'INSERT 0 1' ]]
       then
-        echo -e "\nName: $CUSTOMER_NAME\nPhone: $CUSTOMER_PHONE\nService: $SERVICE_NAME\nAppointed-time: $SERVICE_TIME"
+        # echo -e "\nName: $CUSTOMER_NAME\nPhone: $CUSTOMER_PHONE\nService: $SERVICE_NAME\nAppointed-time: $SERVICE_TIME"
+        echo -e "\nI have put you down for a $SERVICE_NAME at $SERVICE_TIME, $CUSTOMER_NAME."
       fi
     fi
 }
@@ -40,7 +41,7 @@ ENTER_PHONE(){
   sleep 1
   read CUSTOMER_PHONE
   PHONE_MATCHES=$($PSQL "select phone from customers where phone='$CUSTOMER_PHONE'")
-    if [[ ! $CUSTOMER_PHONE =~ ^(1)?[0-9]{3}[0-9]{3}[0-9]{4}$ ]]
+    if [[ ! $CUSTOMER_PHONE =~ ^[0-9]{3}-[0-9]{3}-[0-9]{4}$ ]]
         then
         echo -e "\nEnter a valid phone number"
         sleep 1
@@ -90,7 +91,7 @@ ENTER_SERVICE_TIME(){
     echo -e "\nWhen would you like to come? (format: 1:35 or 12:30)?"
     sleep 1
       read SERVICE_TIME
-      if [[ ! $SERVICE_TIME =~ ^([0-9])?[1-9]:[0-9]{2}$ ]]
+      if [[ ! $SERVICE_TIME =~ ^([0-9])?[0-9]:[0-9]{2}$ ]]
         then
           # PLACE YOUR STATEMENT
           ENTER_SERVICE_TIME
@@ -166,9 +167,6 @@ WELCOME(){
 CUSTOMER_INFORMATION(){
   SERVICE_ID_SELECTED=$1
   ENTER_PHONE $SERVICE_ID_SELECTED
-  # ENTER_NAME
-  # ENTER_SERVICE_TIME
-  # INSERT_DATA 
 }
 
 WELCOME
