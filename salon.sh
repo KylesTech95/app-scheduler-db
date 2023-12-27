@@ -24,8 +24,20 @@ MENU(){
       # If the input matches service_id (in services table)
       else
       echo -e "\n$SERVICE_ID_SELECTED)$SERVICE_NAME"
-      
     fi
+    # echo -e "\nEnter phone number"
+    # read CUSTOMER_PHONE
+    # CUSTOMER_NAME=$($PSQL "select name from customers where phone = '$PHONE_NUMBER'")
+    # if [[ -z $CUSTOMER_NAME ]]
+    # then
+    # # get new customer name
+    # echo -e "\nWhat's your name?"
+    # read CUSTOMER_NAME
+    # # insert new customer
+    # INSERT_CUSTOMER_RESULT=$($PSQL "insert into customers(phone,name) values('$CUSTOMER_PHONE','$CUSTOMER_NAME')")
+    # # When would you like to come?
+    # # echo -e "\nChoose a service-time. (10:00 or 5:35pm or 11:15am)"
     
+  # fi
 }
 MENU
