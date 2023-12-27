@@ -36,13 +36,13 @@ MENU(){
           echo -e "\n$CUSTOMER_NAME, when would you like to come for your$SERVICE_NAME? (format: 10:00 10:30pm 10:30am)"
           read SERVICE_TIME
           INSERT_APP=$($PSQL "insert into appointments(customer_id,service_id,time) values($CUSTOMER_ID,$SERVICE_ID_SELECTED,'$SERVICE_TIME')")
-          echo -e "\nI have put you down for a$SERVICE_NAME at $SERVICE_TIME,$CUSTOMER_NAME."
+          echo -e "\nI have put you down for a $SERVICE_NAME at $SERVICE_TIME, $CUSTOMER_NAME."
           else
           echo -e "\n$CUSTOMER_NAME, when would you like to come for your$SERVICE_NAME? (format: 10:00 10:30pm 10:30am)"
           read SERVICE_TIME
           CUSTOMER_ID=$($PSQL "select customer_id from customers where phone='$CUSTOMER_PHONE'")
           INSERT_APP=$($PSQL "insert into appointments(customer_id,service_id,time) values($CUSTOMER_ID,$SERVICE_ID_SELECTED,'$SERVICE_TIME')")
-          echo -e "\nI have put you down for a$SERVICE_NAME at $SERVICE_TIME,$CUSTOMER_NAME."
+          echo -e "\nI have put you down for a $SERVICE_NAME at $SERVICE_TIME, $CUSTOMER_NAME."
           # else
           # echo -e "\nWelcome back Fabio"
           # sleep 1
