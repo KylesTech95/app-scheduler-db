@@ -2,8 +2,31 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 15.5 (Debian 15.5-1.pgdg110+1)
--- Dumped by pg_dump version 15.5 (Debian 15.5-1.pgdg110+1)
+-- Dumped from database version 12.16 (Ubuntu 12.16-0ubuntu0.20.04.1)
+-- Dumped by pg_dump version 12.16 (Ubuntu 12.16-0ubuntu0.20.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+DROP DATABASE salon;
+--
+-- Name: salon; Type: DATABASE; Schema: -; Owner: freecodecamp
+--
+
+CREATE DATABASE salon WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'C.UTF-8' LC_CTYPE = 'C.UTF-8';
+
+
+ALTER DATABASE salon OWNER TO freecodecamp;
+
+\connect salon
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -21,21 +44,21 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: appointments; Type: TABLE; Schema: public; Owner: postgres
+-- Name: appointments; Type: TABLE; Schema: public; Owner: freecodecamp
 --
 
 CREATE TABLE public.appointments (
     appointment_id integer NOT NULL,
-    customer_id integer,
-    service_id integer,
-    "time" character varying(15)
+    customer_id integer NOT NULL,
+    service_id integer NOT NULL,
+    "time" character varying(15) NOT NULL
 );
 
 
-ALTER TABLE public.appointments OWNER TO postgres;
+ALTER TABLE public.appointments OWNER TO freecodecamp;
 
 --
--- Name: appointments_appointment_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: appointments_appointment_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
 --
 
 CREATE SEQUENCE public.appointments_appointment_id_seq
@@ -47,30 +70,30 @@ CREATE SEQUENCE public.appointments_appointment_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.appointments_appointment_id_seq OWNER TO postgres;
+ALTER TABLE public.appointments_appointment_id_seq OWNER TO freecodecamp;
 
 --
--- Name: appointments_appointment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: appointments_appointment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
 --
 
 ALTER SEQUENCE public.appointments_appointment_id_seq OWNED BY public.appointments.appointment_id;
 
 
 --
--- Name: customers; Type: TABLE; Schema: public; Owner: postgres
+-- Name: customers; Type: TABLE; Schema: public; Owner: freecodecamp
 --
 
 CREATE TABLE public.customers (
     customer_id integer NOT NULL,
-    phone character varying(15),
-    name character varying(15)
+    phone character varying(15) NOT NULL,
+    name character varying(15) NOT NULL
 );
 
 
-ALTER TABLE public.customers OWNER TO postgres;
+ALTER TABLE public.customers OWNER TO freecodecamp;
 
 --
--- Name: customers_customer_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: customers_customer_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
 --
 
 CREATE SEQUENCE public.customers_customer_id_seq
@@ -82,29 +105,29 @@ CREATE SEQUENCE public.customers_customer_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.customers_customer_id_seq OWNER TO postgres;
+ALTER TABLE public.customers_customer_id_seq OWNER TO freecodecamp;
 
 --
--- Name: customers_customer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: customers_customer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
 --
 
 ALTER SEQUENCE public.customers_customer_id_seq OWNED BY public.customers.customer_id;
 
 
 --
--- Name: services; Type: TABLE; Schema: public; Owner: postgres
+-- Name: services; Type: TABLE; Schema: public; Owner: freecodecamp
 --
 
 CREATE TABLE public.services (
     service_id integer NOT NULL,
-    name character varying(15)
+    name character varying(15) NOT NULL
 );
 
 
-ALTER TABLE public.services OWNER TO postgres;
+ALTER TABLE public.services OWNER TO freecodecamp;
 
 --
--- Name: services_service_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: services_service_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
 --
 
 CREATE SEQUENCE public.services_service_id_seq
@@ -116,99 +139,86 @@ CREATE SEQUENCE public.services_service_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.services_service_id_seq OWNER TO postgres;
+ALTER TABLE public.services_service_id_seq OWNER TO freecodecamp;
 
 --
--- Name: services_service_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: services_service_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
 --
 
 ALTER SEQUENCE public.services_service_id_seq OWNED BY public.services.service_id;
 
 
 --
--- Name: appointments appointment_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: appointments appointment_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
 
 ALTER TABLE ONLY public.appointments ALTER COLUMN appointment_id SET DEFAULT nextval('public.appointments_appointment_id_seq'::regclass);
 
 
 --
--- Name: customers customer_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: customers customer_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
 
 ALTER TABLE ONLY public.customers ALTER COLUMN customer_id SET DEFAULT nextval('public.customers_customer_id_seq'::regclass);
 
 
 --
--- Name: services service_id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: services service_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
 
 ALTER TABLE ONLY public.services ALTER COLUMN service_id SET DEFAULT nextval('public.services_service_id_seq'::regclass);
 
 
 --
--- Data for Name: appointments; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: appointments; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-COPY public.appointments (appointment_id, customer_id, service_id, "time") FROM stdin;
-1	1	1	10:30
-2	2	3	9:13
-3	3	1	4:34
-4	4	1	9:30
-5	5	3	12:30
-6	6	4	11:20
-\.
+INSERT INTO public.appointments VALUES (1, 1, 1, '10:30');
+INSERT INTO public.appointments VALUES (2, 1, 2, '11am');
 
 
 --
--- Data for Name: customers; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: customers; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-COPY public.customers (customer_id, phone, name) FROM stdin;
-1	555-555-5555	Fabio
-2	123-456-7890	Mark
-3	838-333-9499	Jackson
-4	098-765-4321	Octavius
-5	933-040-4555	Clay
-6	030-333-4445	Steven
-\.
+INSERT INTO public.customers VALUES (1, '5555555555', 'Fabio');
 
 
 --
--- Data for Name: services; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: services; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-COPY public.services (service_id, name) FROM stdin;
-1	mohawk
-2	curls
-3	blowout
-4	shapeup
-\.
-
-
---
--- Name: appointments_appointment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.appointments_appointment_id_seq', 6, true);
+INSERT INTO public.services VALUES (1, 'trim');
+INSERT INTO public.services VALUES (2, 'wash');
+INSERT INTO public.services VALUES (3, 'fade');
+INSERT INTO public.services VALUES (4, 'blowout');
+INSERT INTO public.services VALUES (5, 'piercings');
+INSERT INTO public.services VALUES (6, 'tattoos');
 
 
 --
--- Name: customers_customer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: appointments_appointment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.customers_customer_id_seq', 6, true);
-
-
---
--- Name: services_service_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.services_service_id_seq', 4, true);
+SELECT pg_catalog.setval('public.appointments_appointment_id_seq', 2, true);
 
 
 --
--- Name: appointments appointments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: customers_customer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
+--
+
+SELECT pg_catalog.setval('public.customers_customer_id_seq', 1, true);
+
+
+--
+-- Name: services_service_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
+--
+
+SELECT pg_catalog.setval('public.services_service_id_seq', 6, true);
+
+
+--
+-- Name: appointments appointments_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
 ALTER TABLE ONLY public.appointments
@@ -216,7 +226,7 @@ ALTER TABLE ONLY public.appointments
 
 
 --
--- Name: customers customers_phone_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: customers customers_phone_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
 ALTER TABLE ONLY public.customers
@@ -224,7 +234,7 @@ ALTER TABLE ONLY public.customers
 
 
 --
--- Name: customers customers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: customers customers_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
 ALTER TABLE ONLY public.customers
@@ -232,7 +242,7 @@ ALTER TABLE ONLY public.customers
 
 
 --
--- Name: services services_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: services services_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
 ALTER TABLE ONLY public.services
@@ -240,7 +250,7 @@ ALTER TABLE ONLY public.services
 
 
 --
--- Name: appointments appointments_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: appointments appointments_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
 ALTER TABLE ONLY public.appointments
@@ -248,7 +258,7 @@ ALTER TABLE ONLY public.appointments
 
 
 --
--- Name: appointments appointments_service_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: appointments appointments_service_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
 ALTER TABLE ONLY public.appointments
